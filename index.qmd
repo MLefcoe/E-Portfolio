@@ -7,18 +7,15 @@ about:
   links: 
     - icon: linkedin
       text: LinkedIn
-      href: https://www.linkedin.com/in/ramon-melser-666932129/
-    - icon: twitter
-      text: Twitter/X
-      href: https://x.com/MelserRamon
+      href: https://www.linkedin.com/in/max-lefcoe-2127812a5/
     - icon: github
       text: GitHub
-      href: https://github.com/ramonmelser
+      href: https://github.com/MLefcoe
     - icon: envelope-at
       text: Email
-      href: mailto:melser@student.ubc.ca
+      href: mailto:maxlefcoe@gmail.com
 ---
 
-Hey there,
+Hey there!
 
-This is your E-Portfolio landing page. Be sure to upload a professional headshot of yourself, and provide the appropriate links to your professional social media (linkedin, X/Twitter, etc). This is also a good place to provide a short summary of your education, career and interests. If you are associated with a lab or working with a research supervisor, it may be appropriate to provide some information on that here, along with links to relevant websites. 
+Welcome to my E-Portfolio. I'm currently completing my Masters in Geomatics for Environmental Management at UBC in Vancouver. I'm originally from Montreal, where I completed my Bachelors in Environmental and Sustainability Science at Concordia University with a specialization in Biology. For now I'm using this portfolio to showcase some cool vizualizations I've made. 
