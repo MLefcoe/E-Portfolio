@@ -4,6 +4,19 @@ format: html
 editor: visual
 ---
 
+```{r, setup}
+options(rgl.useNULL = TRUE)
+library(rgl)
+library(lidR)
+library(sf)
+library(terra)
+library(tree3d)
+library(rayshader)
+library(rayrender)
+library(raybevel)
+
+```
+
 # Project 1 - Capstone Deliverables
 
 This is a sample page where you can archive project deliverables. Every header you use will correspond to a tab in the legend - shown on the right-hand side of your screen ("On this page").
@@ -56,4 +69,78 @@ You can also provide a frame linking to external websites. For example, here is 
 
 ```{=html}
 <iframe width="900" height="700" src="https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool" title="Webpage example"></iframe>
+```
+## 3D Plot
+
+```{r rgl, echo=FALSE}
+lasFile <- readLAScatalog("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")
+las <- clip_rectangle(lasFile, 481250, 5457500, 481500, 5457750)
+
+buildings <- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp")
+pt4 <- st_point(c(481500,5457750), dim = "XY")
+pt3 <- st_point(c(481500, 5457500), dim = "XY")
+pt2 <- st_point(c(481250, 5457750), dim = "XY")
+pt1 <- st_point(c(481250,5457500), dim = "XY")
+pts <- c(pt1,pt2,pt3,pt4)
+
+buildings <- st_crop(buildings,st_bbox(pts))
+buildings <- buildings[-13,]
+
+#Seperate tree from non-tree
+veg <- filter_poi(las, Classification == LASHIGHVEGETATION)
+nonveg <- filter_poi(las, Classification != LASHIGHVEGETATION & Classification != LASMEDIUMVEGETATION & Classification != LASLOWVEGETATION & Classification != LASUNCLASSIFIED & Classification != LASNONCLASSIFIED & Z <= 75)
+
+#Rayshader
+tindiv <- segment_trees(veg, algorithm = li2012(R = 3, speed_up = 5))
+metrics <- crown_metrics(tindiv, .stdtreemetrics, geom = "convex")
+dsm <- rasterize_terrain(las, algorithm = tin())
+dsm_matrix <- raster_to_matrix(dsm)
+ttops <- locate_trees(veg, lmf(ws = 5))
+tree_locations <- st_coordinates(ttops)
+dsm_extent <- ext(dsm)
+extent_vals <- dsm_extent@ptr$vector
+loc_metrics <- st_intersects(ttops, metrics$geometry)
+
+widths <- c()
+for(i in 1:580){
+  index <- loc_metrics[[i]][1]
+  radius <- sqrt(metrics$convhull_area[index]/pi)
+  widths <- c(widths, radius)
+}
+
+height_shade(dsm_matrix) %>%
+  add_shadow(texture_shade(dsm_matrix),0.2) %>% 
+  add_shadow(lamb_shade(dsm_matrix),0) %>% 
+  plot_3d(dsm_matrix, background = "lightblue")
+
+render_tree(lat = tree_locations[,2], 
+            long = tree_locations[,1],
+            crown_width = widths, 
+            absolute_height = TRUE, 
+            tree_height = tree_locations[,3],
+            trunk_height_ratio = 0.2 + 0.1*runif(nrow(tree_locations)),
+            crown_color = "#00aa00",
+            type = "cone",
+            extent = raster::extent(extent_vals), 
+            heightmap = dsm_matrix,
+            clear_previous = TRUE,
+            min_height = 20)
+
+render_buildings(buildings,
+                 extent = raster::extent(extent_vals),
+                 clear_previous = TRUE,
+                 heightmap = dsm_matrix,
+                 material = "brown",
+                 roof_material = "grey27",
+                 roof_height = 10,
+                 angle = 10)
+rgl::pop3d("lights")
+rgl::light3d(phi=35,theta=90, viewpoint.rel=F, diffuse="#ffffff", specular="#000000")
+rgl::light3d(phi=-45,theta=-40, viewpoint.rel=F, diffuse="#aaaaaa", specular="#000000")
+render_snapshot()
+
+render_highquality(filename = "test_render",lightdirection=c(90,45),lightaltitude=c(90,45), 
+                   lightcolor=c("dodgerblue","orange"), 
+                   min_variance = 0, sample_method="sobol_blue", clamp_value=10)
+rglwidget()
 ```
