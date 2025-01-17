@@ -1,12 +1,10 @@
----
-title: "Content & Deliverables"
-format: html
-editor: visual
----
+# Project 1 - Capstone Deliverables
 
-```{r, setup, echo=FALSE, include=FALSE}
-options(rgl.useNULL = TRUE)
-library(rgl)
+This section contains the products from a capstone project I completed during my Master's degree at UBC: Shade Mapping Trees and Buildings.
+
+## 3D Plot
+
+```{r, echo=FALSE, include=FALSE}
 library(lidR)
 library(sf)
 library(terra)
@@ -14,85 +12,30 @@ library(tree3d)
 library(rayshader)
 library(rayrender)
 library(raybevel)
+library(png)
 
-```
-
-# Project 1 - Capstone Deliverables
-
-This is a sample page where you can archive project deliverables. Every header you use will correspond to a tab in the legend - shown on the right-hand side of your screen ("On this page").
-
-If you've produced any GIS layers for your 599 project, this may be a good place to share them as interactive maps through leaflet. Alternatively, you can upload high-res figures showing correlations, box-plots, etc. from your report here, and provide a brief overview of key project results. If you have written some useful functions, you may also want to share those here to demonstrate proficiency in particular coding languages or synergies between notable coding packages.
-
-## Leaflet
-
-Sample leaflet - for detailed leaflet instructions, visit the FCOR 599 workshop archive page [here](https://ubc-mgem-fcor599.github.io/FCOR-599-Workshops/Interactive_Maps/leaflet.html).
-
-```{r leaflet, include = FALSE}
-library(dplyr); library(leaflet)
-
-m <- leaflet() %>%
-  addProviderTiles("Esri.WorldImagery") %>%
-  addScaleBar(position = c("bottomleft")) %>%
-  setView(-123.1207, 49.2827, zoom = 11)
-
-```
-
-```{r map, echo=FALSE}
-m
-```
-
-## Code Snippets
-
-Sample code snippet. Notice that you can provide a toggle to switch between coding languages - this is referred to as a 'tabset' in quarto. It is good practice to try and convert your R code to python, and vice-versa to demonstrate coding proficiency. For example, let's showcase a function for calculating NDVI in R and Python.
-
-::: {.panel-tabset group="language"}
-## R
-
-``` (.r)
-calc_ndvi <- function(nir, red){ ndvi <- (nir-red)/(nir+red) return(ndvi) }
-```
-
-## Python
-
-``` (.python)
-def calc_ndvi(nir, red): 
-  ndvi = (nir.astype(float)-red.astype(float))/(nir.astype(float)+red.astype(float))
-  return(ndvi)
-```
-:::
-
-## External links
-
-You can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available [here](https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool) in case you're interested.
-
-(To use the GEE tool, navigate to any city you'd like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)
-
-```{=html}
-<iframe width="900" height="700" src="https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool" title="Webpage example"></iframe>
-```
-## 3D Plot
-
-```{r rgl, echo=FALSE}
 lasFile <- readLAScatalog("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")
-las <- clip_rectangle(lasFile, 481250, 5457500, 481500, 5457750)
+las <- clip_rectangle(lasFile, 481808.5,5456316.8, 482134.3, 5456601.2)
 
-buildings <- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp")
-pt4 <- st_point(c(481500,5457750), dim = "XY")
-pt3 <- st_point(c(481500, 5457500), dim = "XY")
-pt2 <- st_point(c(481250, 5457750), dim = "XY")
-pt1 <- st_point(c(481250,5457500), dim = "XY")
+buildings <- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp", promote_to_multi = FALSE)
+pt4 <- st_point(c(481808.5,5456316.8), dim = "XY")
+pt3 <- st_point(c(481808.5, 5456601.2), dim = "XY")
+pt2 <- st_point(c(482134.3, 5456316.8), dim = "XY")
+pt1 <- st_point(c(482134.3,5456601.2), dim = "XY")
 pts <- c(pt1,pt2,pt3,pt4)
 
 buildings <- st_crop(buildings,st_bbox(pts))
-buildings <- buildings[-13,]
+buildings <- st_cast(buildings, to = "POLYGON")
 
 #Seperate tree from non-tree
 veg <- filter_poi(las, Classification == LASHIGHVEGETATION)
 nonveg <- filter_poi(las, Classification != LASHIGHVEGETATION & Classification != LASMEDIUMVEGETATION & Classification != LASLOWVEGETATION & Classification != LASUNCLASSIFIED & Classification != LASNONCLASSIFIED & Z <= 75)
 
-#Rayshader
+#Tree segmentation for convex hull (2d)
 tindiv <- segment_trees(veg, algorithm = li2012(R = 3, speed_up = 5))
 metrics <- crown_metrics(tindiv, .stdtreemetrics, geom = "convex")
+
+#rayshader
 dsm <- rasterize_terrain(las, algorithm = tin())
 dsm_matrix <- raster_to_matrix(dsm)
 ttops <- locate_trees(veg, lmf(ws = 5))
@@ -108,39 +51,55 @@ for(i in 1:580){
   widths <- c(widths, radius)
 }
 
+```
+
+*Scroll to zoom. Left-click to rotate.*
+
+```{r, echo=FALSE}
+overlay_img <- png::readPNG("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/basemap_real.png")
+
 height_shade(dsm_matrix) %>%
+  add_overlay(overlay_img) %>% 
   add_shadow(texture_shade(dsm_matrix),0.2) %>% 
   add_shadow(lamb_shade(dsm_matrix),0) %>% 
-  plot_3d(dsm_matrix, background = "lightblue")
+  plot_3d(dsm_matrix, background = "lightblue",
+          zoom = 0.33)
 
 render_tree(lat = tree_locations[,2], 
-            long = tree_locations[,1],
-            crown_width = widths, 
+            long = tree_locations[,1], 
             absolute_height = TRUE, 
+            crown_width = widths,
             tree_height = tree_locations[,3],
             trunk_height_ratio = 0.2 + 0.1*runif(nrow(tree_locations)),
             crown_color = "#00aa00",
             type = "cone",
-            extent = raster::extent(extent_vals), 
+            extent = dsm_extent, 
             heightmap = dsm_matrix,
             clear_previous = TRUE,
-            min_height = 20)
+            min_height = 8)
 
-render_buildings(buildings,
-                 extent = raster::extent(extent_vals),
-                 clear_previous = TRUE,
+render_buildings(buildings[c(9,15),],
+                 extent = dsm_extent,
+                 heightmap = dsm_matrix,
+                 material = "burlywood4",
+                 roof_material = "darkolivegreen",
+                 roof_height = 15,
+                 angle = 10)
+
+render_buildings(buildings[-9,],
+                 extent = dsm_extent,
                  heightmap = dsm_matrix,
                  material = "brown",
                  roof_material = "grey27",
                  roof_height = 10,
                  angle = 10)
+
+
 rgl::pop3d("lights")
 rgl::light3d(phi=35,theta=90, viewpoint.rel=F, diffuse="#ffffff", specular="#000000")
 rgl::light3d(phi=-45,theta=-40, viewpoint.rel=F, diffuse="#aaaaaa", specular="#000000")
-render_snapshot()
 
-render_highquality(filename = "test_render",lightdirection=c(90,45),lightaltitude=c(90,45), 
-                   lightcolor=c("dodgerblue","orange"), 
-                   min_variance = 0, sample_method="sobol_blue", clamp_value=10)
-rglwidget()
+rgl::rglwidget()
 ```
+
+Interactive 3D view of the Forest Sciences Centre on UBC Vancouver Campus. This was not one of the deliverables for my capstone project, but it is the building I spent most of my time at for the year I spent working on it. Produced in R , the tree positions, heights, and widths were generated from LiDAR data.

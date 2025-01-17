@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Your E-Portfolio",
     "section": "",
-    "text": "Hey there!\nWelcome to my E-Portfolio. I’m currently completing my Masters in Geomatics for Environmental Management at UBC in Vancouver. I’m originally from Montreal, where I completed my Bachelors in Environmental and Sustainability Science at Concordia University with a specialization in Biology. For now I’m using this portfolio to showcase some cool vizualizations I’ve made."
+    "text": "Hey there!\nWelcome to my E-Portfolio. I’m currently completing my Masters in Geomatics for Environmental Management at UBC in Vancouver. I’m originally from Montreal, where I completed my Bachelors in Environmental and Sustainability Science at Concordia University with a specialization in Biology. For now I’m using this portfolio to showcase some cool visualizations I’ve made."
   },
   {
     "objectID": "resume.html",
@@ -30,9 +30,9 @@
   {
     "objectID": "content.html",
     "href": "content.html",
-    "title": "Content & Deliverables",
+    "title": "Project 1 - Capstone Deliverables",
     "section": "",
-    "text": "This is a sample page where you can archive project deliverables. Every header you use will correspond to a tab in the legend - shown on the right-hand side of your screen (“On this page”).\nIf you’ve produced any GIS layers for your 599 project, this may be a good place to share them as interactive maps through leaflet. Alternatively, you can upload high-res figures showing correlations, box-plots, etc. from your report here, and provide a brief overview of key project results. If you have written some useful functions, you may also want to share those here to demonstrate proficiency in particular coding languages or synergies between notable coding packages.\n\n\nSample leaflet - for detailed leaflet instructions, visit the FCOR 599 workshop archive page here.\n\n\n\n\n\n\n\n\n\nSample code snippet. Notice that you can provide a toggle to switch between coding languages - this is referred to as a ‘tabset’ in quarto. It is good practice to try and convert your R code to python, and vice-versa to demonstrate coding proficiency. For example, let’s showcase a function for calculating NDVI in R and Python.\n\nRPython\n\n\ncalc_ndvi &lt;- function(nir, red){ ndvi &lt;- (nir-red)/(nir+red) return(ndvi) }\n\n\ndef calc_ndvi(nir, red): \n  ndvi = (nir.astype(float)-red.astype(float))/(nir.astype(float)+red.astype(float))\n  return(ndvi)\n\n\n\n\n\n\nYou can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available here in case you’re interested.\n(To use the GEE tool, navigate to any city you’d like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)\n\n\n\n\n\n\n\n\n\n\n\n\n\nChunk 1 of 1 (100%): state ✓\n\n\nReading layer `building_polygons' from data source \n  `C:\\Users\\mlefcoe.stu\\OneDrive - UBC\\Documents\\FCOR599\\Shade Mapping\\building_polygons.shp' \n  using driver `ESRI Shapefile'\nSimple feature collection with 434 features and 36 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 480978.5 ymin: 5454527 xmax: 483414.8 ymax: 5457826\nProjected CRS: NAD83 / UTM zone 10N\n\n\nWarning: attribute variables are assumed to be spatially constant throughout\nall geometries"
+    "text": "This section contains the products from a capstone project I completed during my Master’s degree at UBC: Shade Mapping Trees and Buildings.\n\n\nScroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive 3D view of the Forest Sciences Centre on UBC Vancouver Campus. This was not one of the deliverables for my capstone project, but it is the building I spent most of my time at for the year I spent working on it. Produced in R , the tree positions, heights, and widths were generated from LiDAR data."
   },
   {
     "objectID": "content.html#leaflet",
@@ -58,9 +58,9 @@
   {
     "objectID": "content.html#d-plot",
     "href": "content.html#d-plot",
-    "title": "Content & Deliverables",
+    "title": "Project 1 - Capstone Deliverables",
     "section": "",
-    "text": "Chunk 1 of 1 (100%): state ✓\n\n\nReading layer `building_polygons' from data source \n  `C:\\Users\\mlefcoe.stu\\OneDrive - UBC\\Documents\\FCOR599\\Shade Mapping\\building_polygons.shp' \n  using driver `ESRI Shapefile'\nSimple feature collection with 434 features and 36 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 480978.5 ymin: 5454527 xmax: 483414.8 ymax: 5457826\nProjected CRS: NAD83 / UTM zone 10N\n\n\nWarning: attribute variables are assumed to be spatially constant throughout\nall geometries"
+    "text": "Scroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive 3D view of the Forest Sciences Centre on UBC Vancouver Campus. This was not one of the deliverables for my capstone project, but it is the building I spent most of my time at for the year I spent working on it. Produced in R , the tree positions, heights, and widths were generated from LiDAR data."
   },
   {
     "objectID": "index - base.html",
