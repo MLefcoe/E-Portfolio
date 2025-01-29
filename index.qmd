@@ -1,6 +1,6 @@
 ---
 title: "Maxwell Lefcoe"
-image: images/portfolio_pic.jpg
+image: images/portfolio_pic.JPG
 about:
   template: marquee
   image-width: 20em
