@@ -23,7 +23,7 @@ library(gifski)
 Assessing the percentage of tree shade per neighbourhood that falls on buildings.
 
 ::: {.content-visible when-format="html"}
-![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZG1iczJuamhuc2Q3emQ1bDR5aGQ4YmozdXh4bjg0Mm4wdXg2N3hxNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NvmkxbczCmN7TJ2m8y/giphy.gif)
+![](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHhkc3kxb3VtdG5lcW9xYWVoaWFqbHc2MmhjdmxsdzJzZmVnc3FvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xaE3XXdeeLoLcssRe3/giphy.gif)
 
 Example hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade. Generated from LiDAR in R.
 :::
@@ -52,7 +52,7 @@ rgl::rglwidget()
 
 Same interactive point cloud with the central tree isolated and normalized ground points added back in.
 
-![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTN0aXppeWQ3ZXFnZzluc3Bnb2lwZjR4dWdldWRldTIyN245YXRlaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/79fE961cu1qqDgWnHq/giphy.gif)
+![](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNG41ZnI2bmt1Nmk5emV3bG1ydnVjdXEyeGxpaHA3bzc2bTVtb2hoZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/46gE1BJq280xJBrGsW/giphy.gif)
 
 Example tree shade cast by an individual tree every thirty minutes.
 
