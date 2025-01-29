@@ -1,0 +1,73 @@
+---
+title: "Project Deliverables"
+---
+
+```{r, echo=FALSE, include=FALSE}
+library(lidR)
+library(sf)
+library(terra)
+library(tree3d)
+library(rayshader)
+library(rayrender)
+library(raybevel)
+library(png)
+library(gifski)
+```
+
+# Project 1 - Shade Mapping Trees and Buildings
+
+![](images/tree_render.png)
+
+### Tree Shade in UBC Neighbourhoods
+
+Assessing the percentage of tree shade per neighbourhood that falls on buildings.
+
+::: {.content-visible when-format="html"}
+![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZG1iczJuamhuc2Q3emQ1bDR5aGQ4YmozdXh4bjg0Mm4wdXg2N3hxNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NvmkxbczCmN7TJ2m8y/giphy.gif)
+
+Example hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade. Generated from LiDAR in R.
+:::
+
+![](images/clipboard-2343170415.png)
+
+Percentage of tree shade falling on buildings per neighbourhood, hourly from sunrise to sunset.
+
+### Individual Tree Shade
+
+#### Isolating the shade of individual trees for a species level analysis. Beginning from a point cloud clipped to a species of interest, ending with a shade model for a specific tree.
+
+```{r, echo = FALSE}
+eg_roi <- readLAS("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi.las") 
+plot(eg_roi)  
+rgl::rglwidget()
+```
+
+Interactive point cloud for one area of interest filtered to display trees only.
+
+```{r, echo = FALSE}
+eg_roiindiv <- readLAS("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi_indiv.las") 
+plot(eg_roiindiv)  
+rgl::rglwidget()
+```
+
+Same interactive point cloud with the central tree isolated and normalized ground points added back in.
+
+![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTN0aXppeWQ3ZXFnZzluc3Bnb2lwZjR4dWdldWRldTIyN245YXRlaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/79fE961cu1qqDgWnHq/giphy.gif)
+
+Example tree shade cast by an individual tree every thirty minutes.
+
+# Project 2 - Urban Heat Island Hotspots Montreal
+
+The client for this project was Peter-Mcgill Community Table, looking to identify areas vulnerable to UHI in the district of Ville-Marie.
+
+![](images/clipboard-3181373758.png)
+
+Risk level based on medium income across districts, population aged 65 or older, and population density.
+
+![](images/clipboard-473975278.png)
+
+Environmental risk factors map. Describes the likelihood of Urban Heat Island Effect.
+
+![](images/clipboard-3391112033.png)
+
+# 

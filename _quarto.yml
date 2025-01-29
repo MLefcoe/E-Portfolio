@@ -3,17 +3,21 @@ project:
   output-dir: C:/Users/mlefcoe.stu/Documents/FCOR599/E-Portfolio
 
 website:
-  title: "Your E-Portfolio"
+  title: "Portfolio: Geomatics and Environment"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - href: resume.qmd
         text: Resume
-      - href: publications.qmd
-        text: Publications
-      - href: content.qmd
-        text: Content & Deliverables
+      - href: Project Deliverables.qmd
+        text: Project Deliverables
+      - href: Maps and Visualizations.qmd
+        text: Maps and Visualizations
+      - href: Reports.qmd
+        text: Reports
+      - href: Code Snippets.qmd
+        text: Code Snippets
 
 format:
   html:
