@@ -148,6 +148,55 @@ rgl::rglwidget()
 
 ```
 
+### Isolate center tree from a LiDAR point cloud
+
+```{r, eval = FALSE}
+#Load in 764 segmented point clouds
+path <- (list.files("Outputs/Species Level/las_clipped", full.names = TRUE))
+
+rois <- list()
+for(i in 1:length(path)){
+  rois[[i]] <- readLAS(path[i])
+}
+
+#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below
+roi_indiv <- list()
+for(i in 1:764){
+#generate metrics as a table of treeIDs and coordinates
+metrics <- crown_metrics(rois[[i]], ~list(z_max = max(Z), z_mean = mean(Z)))
+
+#use filename to create point geometries in the center of the plot
+test_centroid <- str_extract(path[i], 
+                 "[:digit:]{6}\\.[:digit:]{1}\\_[:digit:]{7}|[:digit:]{6}\\_[:digit:]{7}") %>%
+  str_replace("_", ", ") %>%
+  str_split("\\,\\s",2) %>%
+  unlist() %>%
+  as.numeric() %>%
+  st_point() %>%
+  st_geometry()
+
+st_crs(test_centroid) <- 26910
+  
+#add new row to metrics table that contains distance from tree to center
+new_metrics <- mutate(metrics, dist = st_distance(metrics, test_centroid))
+  
+#central tree is the tree with the shortest distance to the centroid
+center_tree <- filter(new_metrics, dist == min(dist))
+  
+#assign it back out to a list
+roi_indiv[[i]] <- filter_poi(rois[[i]], treeID == center_tree$treeID)
+}
+
+####work with terrains####
+path <- list.files("Outputs/Species Level/las_terrain_clipped",full.names =TRUE)
+
+terrains <- list()
+
+for(i in 1:length(path)){
+  terrains[[i]] <- readLAS(path[i])
+}
+```
+
 ### Arcpy Script for Shade Percentage Analysis
 
 ``` python
