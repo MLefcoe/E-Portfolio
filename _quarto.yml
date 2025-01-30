@@ -12,8 +12,8 @@ website:
         text: Resume
       - href: Project Deliverables.qmd
         text: Project Deliverables
-      - href: Maps and Visualizations.qmd
-        text: Maps and Visualizations
+      - href: Other Maps and Visualizations.qmd
+        text: Other Maps and Visualizations
       - href: Reports.qmd
         text: Reports
       - href: Code Snippets.qmd
