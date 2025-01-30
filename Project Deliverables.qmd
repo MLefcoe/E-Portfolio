@@ -36,6 +36,8 @@ Percentage of tree shade falling on buildings per neighbourhood, hourly from sun
 
 #### Isolating the shade of individual trees for a species level analysis. Beginning from a point cloud clipped to a species of interest, ending with a shade model for a specific tree.
 
+*Scroll to zoom. Left-click to rotate.*
+
 ```{r, echo = FALSE}
 eg_roi <- readLAS("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi.las") 
 plot(eg_roi)  
