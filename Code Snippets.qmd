@@ -186,15 +186,6 @@ center_tree <- filter(new_metrics, dist == min(dist))
 #assign it back out to a list
 roi_indiv[[i]] <- filter_poi(rois[[i]], treeID == center_tree$treeID)
 }
-
-####work with terrains####
-path <- list.files("Outputs/Species Level/las_terrain_clipped",full.names =TRUE)
-
-terrains <- list()
-
-for(i in 1:length(path)){
-  terrains[[i]] <- readLAS(path[i])
-}
 ```
 
 ### Arcpy Script for Shade Percentage Analysis
