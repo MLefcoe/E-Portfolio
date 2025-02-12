@@ -8,8 +8,6 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: resume.qmd
-        text: Resume
       - href: Project Deliverables.qmd
         text: Project Deliverables
       - href: Other Maps and Visualizations.qmd
