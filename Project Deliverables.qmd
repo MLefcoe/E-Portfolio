@@ -25,7 +25,7 @@ Assessing the percentage of tree shade per neighbourhood that falls on buildings
 ::: {.content-visible when-format="html"}
 ![](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHhkc3kxb3VtdG5lcW9xYWVoaWFqbHc2MmhjdmxsdzJzZmVnc3FvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xaE3XXdeeLoLcssRe3/giphy.gif)
 
-Example hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade. Generated from LiDAR in R.
+Example hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade.
 :::
 
 ![](images/clipboard-2343170415.png)
