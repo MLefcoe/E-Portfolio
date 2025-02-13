@@ -10,7 +10,7 @@ website:
         text: Home
       - href: Project Deliverables.qmd
         text: Project Deliverables
-      - href: Other_Maps_and_Visualizations.qmd
+      - href: Other-Maps-and-Visualizations.qmd
         text: Other Maps and Visualizations
       - href: Reports.qmd
         text: Reports
