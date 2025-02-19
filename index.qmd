@@ -1,6 +1,6 @@
 ---
 title: "Maxwell Lefcoe"
-image: images/portfolio_pic.JPG
+image: images/portfolio_headshot.png
 toc: false
 about:
   template: jolla
