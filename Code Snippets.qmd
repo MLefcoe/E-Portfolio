@@ -2,6 +2,8 @@
 title: "Code Snippets"
 execute: 
   eval: false
+code-block-bg: "white"
+code-block-border-left: "black"
 ---
 
 # Code Snippets
@@ -11,8 +13,6 @@ Morgan-Wall T (2025). *rayshader: Create Maps and Visualize Data in 2D and 3D*.
 Roussel J, Auty D, Coops NC, Tompalski P, Goodbody TR, Meador AS, Bourdon J, de Boissieu F, Achim A (2020). “lidR: An R package for analysis of Airborne Laser Scanning (ALS) data.” *Remote Sensing of Environment*, **251**, 112061. ISSN 0034-4257, [doi:10.1016/j.rse.2020.112061](https://doi.org/10.1016/j.rse.2020.112061), <https://www.sciencedirect.com/science/article/pii/S0034425720304314>.
 
 Roussel J, Auty D (2024). *Airborne LiDAR Data Manipulation and Visualization for Forestry Applications*. R package version 4.1.2, <https://cran.r-project.org/package=lidR>.
-
-[https://github.com/tylermorganwall/tree3dhttps://github.com/tylermorganwall/tree3d](https://github.com/tylermorganwall/tree3d)
 
 ### Shade simulation function in R
 
@@ -43,112 +43,6 @@ shade_sim <- function(pc, sun_calc,name){   #take a LiDAR point cloud,
     writeRaster(dsm, name, overwrite = TRUE)   #write out the result
   }
 }
-
-```
-
-### Create 3D interactive plot from LiDAR using Rayshader and Tree3d in R
-
-```{r, eval=FALSE}
-#library(lidR)
-#library(sf)
-#library(terra)
-#library(tree3d)
-#library(rayshader)
-#library(png)
-#library(rgl)
-
-#Load in data 
-
-#lasFile <- readLAScatalog("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")
-
-#buildings <- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp", promote_to_multi = FALSE)
-
-#Set up region of interest
-
-las <- clip_rectangle(lasFile, 481808.5,5456316.8, 482134.3, 5456601.2)
-
-pt4 <- st_point(c(481808.5,5456316.8), dim = "XY")
-pt3 <- st_point(c(481808.5, 5456601.2), dim = "XY")
-pt2 <- st_point(c(482134.3, 5456316.8), dim = "XY")
-pt1 <- st_point(c(482134.3,5456601.2), dim = "XY")
-pts <- c(pt1,pt2,pt3,pt4)
-
-buildings <- st_crop(buildings,st_bbox(pts))
-buildings <- st_cast(buildings, to = "POLYGON")
-
-#Seperate tree from non-tree
-veg <- filter_poi(las, Classification == LASHIGHVEGETATION)
-
-#Tree segmentation for convex hull (2d)
-tindiv <- segment_trees(veg, algorithm = li2012(R = 3, speed_up = 5))
-metrics <- crown_metrics(tindiv, .stdtreemetrics, geom = "convex")
-
-#rayshader prep and get locations, heights and extent
-dsm <- rasterize_terrain(las, algorithm = tin())
-dsm_matrix <- raster_to_matrix(dsm)
-ttops <- locate_trees(veg, lmf(ws = 5))
-tree_locations <- st_coordinates(ttops)
-dsm_extent <- ext(dsm)
-extent_vals <- dsm_extent@ptr$vector
-loc_metrics <- st_intersects(ttops, metrics$geometry)
-
-#get tree widths
-widths <- c()
-for(i in 1:580){
-  index <- loc_metrics[[i]][1]
-  radius <- sqrt(metrics$convhull_area[index]/pi)
-  widths <- c(widths, radius)
-}
-
-#Overlay street names
-overlay_img <- png::readPNG("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/basemap_real.png")
-
-#3D Digital Elevation Model
-height_shade(dsm_matrix) %>%
-  add_overlay(overlay_img) %>% 
-  add_shadow(texture_shade(dsm_matrix),0.2) %>% 
-  add_shadow(lamb_shade(dsm_matrix),0) %>% 
-  plot_3d(dsm_matrix, background = "lightblue",
-          zoom = 0.33)
-
-#Render trees
-render_tree(lat = tree_locations[,2], 
-            long = tree_locations[,1], 
-            absolute_height = TRUE, 
-            crown_width = widths,
-            tree_height = tree_locations[,3],
-            trunk_height_ratio = 0.2 + 0.1*runif(nrow(tree_locations)),
-            crown_color = "#00aa00",
-            type = "cone",
-            extent = dsm_extent, 
-            heightmap = dsm_matrix,
-            clear_previous = TRUE,
-            min_height = 8)
-
-#Render Forest Sciences Center
-render_buildings(buildings[c(9,15),],
-                 extent = dsm_extent,
-                 heightmap = dsm_matrix,
-                 material = "burlywood4",
-                 roof_material = "darkolivegreen",
-                 roof_height = 15,
-                 angle = 10)
-
-#Render other buildings
-render_buildings(buildings[-9,],
-                 extent = dsm_extent,
-                 heightmap = dsm_matrix,
-                 material = "brown",
-                 roof_material = "grey27",
-                 roof_height = 10,
-                 angle = 10)
-
-#Change lighting
-rgl::pop3d("lights")
-rgl::light3d(phi=35,theta=90, viewpoint.rel=F, diffuse="#ffffff", specular="#000000")
-rgl::light3d(phi=-45,theta=-40, viewpoint.rel=F, diffuse="#aaaaaa", specular="#000000")
-
-rgl::rglwidget()
 
 ```
 

@@ -161,7 +161,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#code-snippets" id="toc-code-snippets" class="nav-link active" data-scroll-target="#code-snippets">Code Snippets</a>
   <ul class="collapse">
   <li><a href="#shade-simulation-function-in-r" id="toc-shade-simulation-function-in-r" class="nav-link" data-scroll-target="#shade-simulation-function-in-r">Shade simulation function in R</a></li>
-  <li><a href="#create-3d-interactive-plot-from-lidar-using-rayshader-and-tree3d-in-r" id="toc-create-3d-interactive-plot-from-lidar-using-rayshader-and-tree3d-in-r" class="nav-link" data-scroll-target="#create-3d-interactive-plot-from-lidar-using-rayshader-and-tree3d-in-r">Create 3D interactive plot from LiDAR using Rayshader and Tree3d in R</a></li>
   <li><a href="#isolate-center-tree-from-a-lidar-point-cloud" id="toc-isolate-center-tree-from-a-lidar-point-cloud" class="nav-link" data-scroll-target="#isolate-center-tree-from-a-lidar-point-cloud">Isolate center tree from a LiDAR point cloud</a></li>
   <li><a href="#arcpy-script-for-shade-percentage-analysis" id="toc-arcpy-script-for-shade-percentage-analysis" class="nav-link" data-scroll-target="#arcpy-script-for-shade-percentage-analysis">Arcpy Script for Shade Percentage Analysis</a></li>
   </ul></li>
@@ -195,7 +194,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Morgan-Wall T (2025).&nbsp;<em>rayshader: Create Maps and Visualize Data in 2D and 3D</em>. R package version 0.38.10, https://github.com/tylermorganwall/rayshader,&nbsp;<a href="https://www.rayshader.com/">https://www.rayshader.com</a>.</p>
 <p>Roussel J, Auty D, Coops NC, Tompalski P, Goodbody TR, Meador AS, Bourdon J, de Boissieu F, Achim A (2020). “lidR: An R package for analysis of Airborne Laser Scanning (ALS) data.” <em>Remote Sensing of Environment</em>, <strong>251</strong>, 112061. ISSN 0034-4257, <a href="https://doi.org/10.1016/j.rse.2020.112061">doi:10.1016/j.rse.2020.112061</a>, <a href="https://www.sciencedirect.com/science/article/pii/S0034425720304314" class="uri">https://www.sciencedirect.com/science/article/pii/S0034425720304314</a>.</p>
 <p>Roussel J, Auty D (2024). <em>Airborne LiDAR Data Manipulation and Visualization for Forestry Applications</em>. R package version 4.1.2, <a href="https://cran.r-project.org/package=lidR" class="uri">https://cran.r-project.org/package=lidR</a>.</p>
-<p><a href="https://github.com/tylermorganwall/tree3d">https://github.com/tylermorganwall/tree3dhttps://github.com/tylermorganwall/tree3d</a></p>
 <section id="shade-simulation-function-in-r" class="level3">
 <h3 class="anchored" data-anchor-id="shade-simulation-function-in-r">Shade simulation function in R</h3>
 <div class="cell">
@@ -227,270 +225,165 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="create-3d-interactive-plot-from-lidar-using-rayshader-and-tree3d-in-r" class="level3">
-<h3 class="anchored" data-anchor-id="create-3d-interactive-plot-from-lidar-using-rayshader-and-tree3d-in-r">Create 3D interactive plot from LiDAR using Rayshader and Tree3d in R</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#library(lidR)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(sf)</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#library(terra)</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#library(tree3d)</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#library(rayshader)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#library(png)</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#library(rgl)</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in data </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#lasFile &lt;- readLAScatalog("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#buildings &lt;- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp", promote_to_multi = FALSE)</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Set up region of interest</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>las <span class="ot">&lt;-</span> <span class="fu">clip_rectangle</span>(lasFile, <span class="fl">481808.5</span>,<span class="fl">5456316.8</span>, <span class="fl">482134.3</span>, <span class="fl">5456601.2</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>pt4 <span class="ot">&lt;-</span> <span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">481808.5</span>,<span class="fl">5456316.8</span>), <span class="at">dim =</span> <span class="st">"XY"</span>)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>pt3 <span class="ot">&lt;-</span> <span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">481808.5</span>, <span class="fl">5456601.2</span>), <span class="at">dim =</span> <span class="st">"XY"</span>)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>pt2 <span class="ot">&lt;-</span> <span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">482134.3</span>, <span class="fl">5456316.8</span>), <span class="at">dim =</span> <span class="st">"XY"</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>pt1 <span class="ot">&lt;-</span> <span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">482134.3</span>,<span class="fl">5456601.2</span>), <span class="at">dim =</span> <span class="st">"XY"</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">c</span>(pt1,pt2,pt3,pt4)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>buildings <span class="ot">&lt;-</span> <span class="fu">st_crop</span>(buildings,<span class="fu">st_bbox</span>(pts))</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>buildings <span class="ot">&lt;-</span> <span class="fu">st_cast</span>(buildings, <span class="at">to =</span> <span class="st">"POLYGON"</span>)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#Seperate tree from non-tree</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>veg <span class="ot">&lt;-</span> <span class="fu">filter_poi</span>(las, Classification <span class="sc">==</span> LASHIGHVEGETATION)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">#Tree segmentation for convex hull (2d)</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>tindiv <span class="ot">&lt;-</span> <span class="fu">segment_trees</span>(veg, <span class="at">algorithm =</span> <span class="fu">li2012</span>(<span class="at">R =</span> <span class="dv">3</span>, <span class="at">speed_up =</span> <span class="dv">5</span>))</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">crown_metrics</span>(tindiv, .stdtreemetrics, <span class="at">geom =</span> <span class="st">"convex"</span>)</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#rayshader prep and get locations, heights and extent</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>dsm <span class="ot">&lt;-</span> <span class="fu">rasterize_terrain</span>(las, <span class="at">algorithm =</span> <span class="fu">tin</span>())</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>dsm_matrix <span class="ot">&lt;-</span> <span class="fu">raster_to_matrix</span>(dsm)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>ttops <span class="ot">&lt;-</span> <span class="fu">locate_trees</span>(veg, <span class="fu">lmf</span>(<span class="at">ws =</span> <span class="dv">5</span>))</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>tree_locations <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(ttops)</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>dsm_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(dsm)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>extent_vals <span class="ot">&lt;-</span> dsm_extent<span class="sc">@</span>ptr<span class="sc">$</span>vector</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>loc_metrics <span class="ot">&lt;-</span> <span class="fu">st_intersects</span>(ttops, metrics<span class="sc">$</span>geometry)</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#get tree widths</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>widths <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">580</span>){</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  index <span class="ot">&lt;-</span> loc_metrics[[i]][<span class="dv">1</span>]</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  radius <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(metrics<span class="sc">$</span>convhull_area[index]<span class="sc">/</span>pi)</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  widths <span class="ot">&lt;-</span> <span class="fu">c</span>(widths, radius)</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co">#Overlay street names</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>overlay_img <span class="ot">&lt;-</span> png<span class="sc">::</span><span class="fu">readPNG</span>(<span class="st">"C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/basemap_real.png"</span>)</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">#3D Digital Elevation Model</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu">height_shade</span>(dsm_matrix) <span class="sc">%&gt;%</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(overlay_img) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">texture_shade</span>(dsm_matrix),<span class="fl">0.2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">lamb_shade</span>(dsm_matrix),<span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_3d</span>(dsm_matrix, <span class="at">background =</span> <span class="st">"lightblue"</span>,</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>          <span class="at">zoom =</span> <span class="fl">0.33</span>)</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co">#Render trees</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="fu">render_tree</span>(<span class="at">lat =</span> tree_locations[,<span class="dv">2</span>], </span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>            <span class="at">long =</span> tree_locations[,<span class="dv">1</span>], </span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>            <span class="at">absolute_height =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>            <span class="at">crown_width =</span> widths,</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">tree_height =</span> tree_locations[,<span class="dv">3</span>],</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>            <span class="at">trunk_height_ratio =</span> <span class="fl">0.2</span> <span class="sc">+</span> <span class="fl">0.1</span><span class="sc">*</span><span class="fu">runif</span>(<span class="fu">nrow</span>(tree_locations)),</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>            <span class="at">crown_color =</span> <span class="st">"#00aa00"</span>,</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>            <span class="at">type =</span> <span class="st">"cone"</span>,</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">extent =</span> dsm_extent, </span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>            <span class="at">heightmap =</span> dsm_matrix,</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>            <span class="at">clear_previous =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_height =</span> <span class="dv">8</span>)</span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="co">#Render Forest Sciences Center</span></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="fu">render_buildings</span>(buildings[<span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">15</span>),],</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>                 <span class="at">extent =</span> dsm_extent,</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>                 <span class="at">heightmap =</span> dsm_matrix,</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>                 <span class="at">material =</span> <span class="st">"burlywood4"</span>,</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roof_material =</span> <span class="st">"darkolivegreen"</span>,</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roof_height =</span> <span class="dv">15</span>,</span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>                 <span class="at">angle =</span> <span class="dv">10</span>)</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co">#Render other buildings</span></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="fu">render_buildings</span>(buildings[<span class="sc">-</span><span class="dv">9</span>,],</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>                 <span class="at">extent =</span> dsm_extent,</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>                 <span class="at">heightmap =</span> dsm_matrix,</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>                 <span class="at">material =</span> <span class="st">"brown"</span>,</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roof_material =</span> <span class="st">"grey27"</span>,</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roof_height =</span> <span class="dv">10</span>,</span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>                 <span class="at">angle =</span> <span class="dv">10</span>)</span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="co">#Change lighting</span></span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>rgl<span class="sc">::</span><span class="fu">pop3d</span>(<span class="st">"lights"</span>)</span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>rgl<span class="sc">::</span><span class="fu">light3d</span>(<span class="at">phi=</span><span class="dv">35</span>,<span class="at">theta=</span><span class="dv">90</span>, <span class="at">viewpoint.rel=</span>F, <span class="at">diffuse=</span><span class="st">"#ffffff"</span>, <span class="at">specular=</span><span class="st">"#000000"</span>)</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>rgl<span class="sc">::</span><span class="fu">light3d</span>(<span class="at">phi=</span><span class="sc">-</span><span class="dv">45</span>,<span class="at">theta=</span><span class="sc">-</span><span class="dv">40</span>, <span class="at">viewpoint.rel=</span>F, <span class="at">diffuse=</span><span class="st">"#aaaaaa"</span>, <span class="at">specular=</span><span class="st">"#000000"</span>)</span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>rgl<span class="sc">::</span><span class="fu">rglwidget</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
 <section id="isolate-center-tree-from-a-lidar-point-cloud" class="level3">
 <h3 class="anchored" data-anchor-id="isolate-center-tree-from-a-lidar-point-cloud">Isolate center tree from a LiDAR point cloud</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in 764 segmented point clouds</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> (<span class="fu">list.files</span>(<span class="st">"Outputs/Species Level/las_clipped"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rois <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(path)){</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  rois[[i]] <span class="ot">&lt;-</span> <span class="fu">readLAS</span>(path[i])</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>roi_indiv <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">764</span>){</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#generate metrics as a table of treeIDs and coordinates</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">crown_metrics</span>(rois[[i]], <span class="sc">~</span><span class="fu">list</span>(<span class="at">z_max =</span> <span class="fu">max</span>(Z), <span class="at">z_mean =</span> <span class="fu">mean</span>(Z)))</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#use filename to create point geometries in the center of the plot</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>test_centroid <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(path[i], </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"[:digit:]{6}</span><span class="sc">\\</span><span class="st">.[:digit:]{1}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}|[:digit:]{6}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">"_"</span>, <span class="st">", "</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_split</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">,</span><span class="sc">\\</span><span class="st">s"</span>,<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_geometry</span>()</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(test_centroid) <span class="ot">&lt;-</span> <span class="dv">26910</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#add new row to metrics table that contains distance from tree to center</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>new_metrics <span class="ot">&lt;-</span> <span class="fu">mutate</span>(metrics, <span class="at">dist =</span> <span class="fu">st_distance</span>(metrics, test_centroid))</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#central tree is the tree with the shortest distance to the centroid</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>center_tree <span class="ot">&lt;-</span> <span class="fu">filter</span>(new_metrics, dist <span class="sc">==</span> <span class="fu">min</span>(dist))</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#assign it back out to a list</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>roi_indiv[[i]] <span class="ot">&lt;-</span> <span class="fu">filter_poi</span>(rois[[i]], treeID <span class="sc">==</span> center_tree<span class="sc">$</span>treeID)</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in 764 segmented point clouds</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> (<span class="fu">list.files</span>(<span class="st">"Outputs/Species Level/las_clipped"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rois <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(path)){</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  rois[[i]] <span class="ot">&lt;-</span> <span class="fu">readLAS</span>(path[i])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>roi_indiv <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">764</span>){</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#generate metrics as a table of treeIDs and coordinates</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">crown_metrics</span>(rois[[i]], <span class="sc">~</span><span class="fu">list</span>(<span class="at">z_max =</span> <span class="fu">max</span>(Z), <span class="at">z_mean =</span> <span class="fu">mean</span>(Z)))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#use filename to create point geometries in the center of the plot</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>test_centroid <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(path[i], </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"[:digit:]{6}</span><span class="sc">\\</span><span class="st">.[:digit:]{1}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}|[:digit:]{6}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">"_"</span>, <span class="st">", "</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_split</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">,</span><span class="sc">\\</span><span class="st">s"</span>,<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_geometry</span>()</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(test_centroid) <span class="ot">&lt;-</span> <span class="dv">26910</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#add new row to metrics table that contains distance from tree to center</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>new_metrics <span class="ot">&lt;-</span> <span class="fu">mutate</span>(metrics, <span class="at">dist =</span> <span class="fu">st_distance</span>(metrics, test_centroid))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#central tree is the tree with the shortest distance to the centroid</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>center_tree <span class="ot">&lt;-</span> <span class="fu">filter</span>(new_metrics, dist <span class="sc">==</span> <span class="fu">min</span>(dist))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#assign it back out to a list</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>roi_indiv[[i]] <span class="ot">&lt;-</span> <span class="fu">filter_poi</span>(rois[[i]], treeID <span class="sc">==</span> center_tree<span class="sc">$</span>treeID)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="arcpy-script-for-shade-percentage-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="arcpy-script-for-shade-percentage-analysis">Arcpy Script for Shade Percentage Analysis</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop georeference function through each folder, georeference shade simulation outputs</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>control_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Inputs\Control_Points"</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    georefer(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], out_name <span class="op">=</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)], link <span class="op">=</span> control_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ras_folders[i][:ras_folders[i].index(<span class="st">"_"</span>)] <span class="op">+</span> <span class="st">".txt"</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Define function to reclassify all shade rasters in a folder</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slicer(directory, out_name):</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">".tif"</span>):</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            out_slice <span class="op">=</span> arcpy.sa.Slice(in_raster<span class="op">=</span>ras, number_zones<span class="op">=</span><span class="dv">3</span>, </span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            slice_type <span class="op">=</span> <span class="st">"NATURAL_BREAKS"</span>)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            out_slice.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"reclassed"</span> <span class="op">+</span> </span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop reclassing functions through folders</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    slicer(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#Define function to extract shade from all shade rasters in a folder</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_shade(directory, out_name):</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"reclassed"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>            attextract <span class="op">=</span> arcpy.sa.ExtractByAttributes(in_raster <span class="op">=</span> ras,</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>            where_clause <span class="op">=</span> <span class="st">"VALUE = 1"</span>)</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>            attextract.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"extracted"</span> <span class="op">+</span> </span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"reclassed"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>            attextract <span class="op">=</span> arcpy.sa.ExtractByAttributes(in_raster <span class="op">=</span> ras,</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>            where_clause <span class="op">=</span> <span class="st">"VALUE = 1"</span>)</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>            attextract.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"extracted"</span> <span class="op">+</span> </span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop extracting function through each folder</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    extract_shade(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co">#Define a function to convert shade rasters in a folder to polygons</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ras_to_poly(directory, out_name):</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"extracted"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>            arcpy.conversion.RasterToPolygon(in_raster<span class="op">=</span>ras, </span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>            out_polygon_features <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"shade_poly"</span> <span class="op">+</span></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>)</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"extracted"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>            arcpy.conversion.RasterToPolygon(in_raster<span class="op">=</span>ras, </span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>            out_polygon_features <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"shade_poly"</span> <span class="op">+</span></span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>)</span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop polyshade function through all folders</span></span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>ras_folders</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    ras_to_poly(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="co">#Define a function to interesect each shade raster in a folder with a specified feature class</span></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> intersector(directory, out_name, feature):</span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"poly"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>):</span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>            arcpy.analysis.PairwiseIntersect(in_features <span class="op">=</span> [feature, ras],</span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>            out_feature_class <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"intersected"</span> <span class="op">+</span></span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count))</span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"poly"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>):</span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>            arcpy.analysis.PairwiseIntersect(in_features <span class="op">=</span> [feature, ras],</span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>            out_feature_class <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"intersected"</span> <span class="op">+</span></span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count))</span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop the intersection function through each folder</span></span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>    intersector(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>    out_name <span class="op">=</span> ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)], </span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>    feature <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\OneDrive - UBC\Documents\FCOR599\Shade         Mapping\building_polygons.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop georeference function through each folder, georeference shade simulation outputs</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>control_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Inputs\Control_Points"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    georefer(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], out_name <span class="op">=</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)], link <span class="op">=</span> control_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ras_folders[i][:ras_folders[i].index(<span class="st">"_"</span>)] <span class="op">+</span> <span class="st">".txt"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Define function to reclassify all shade rasters in a folder</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slicer(directory, out_name):</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">".tif"</span>):</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            out_slice <span class="op">=</span> arcpy.sa.Slice(in_raster<span class="op">=</span>ras, number_zones<span class="op">=</span><span class="dv">3</span>, </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            slice_type <span class="op">=</span> <span class="st">"NATURAL_BREAKS"</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            out_slice.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"reclassed"</span> <span class="op">+</span> </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop reclassing functions through folders</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    slicer(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#Define function to extract shade from all shade rasters in a folder</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_shade(directory, out_name):</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"reclassed"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>            attextract <span class="op">=</span> arcpy.sa.ExtractByAttributes(in_raster <span class="op">=</span> ras,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>            where_clause <span class="op">=</span> <span class="st">"VALUE = 1"</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>            attextract.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"extracted"</span> <span class="op">+</span> </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"reclassed"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            attextract <span class="op">=</span> arcpy.sa.ExtractByAttributes(in_raster <span class="op">=</span> ras,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>            where_clause <span class="op">=</span> <span class="st">"VALUE = 1"</span>)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            attextract.save(directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"extracted"</span> <span class="op">+</span> </span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop extracting function through each folder</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    extract_shade(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co">#Define a function to convert shade rasters in a folder to polygons</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ras_to_poly(directory, out_name):</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"extracted"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>            arcpy.conversion.RasterToPolygon(in_raster<span class="op">=</span>ras, </span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>            out_polygon_features <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"shade_poly"</span> <span class="op">+</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"extracted"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".tif"</span>):</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>            arcpy.conversion.RasterToPolygon(in_raster<span class="op">=</span>ras, </span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>            out_polygon_features <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"shade_poly"</span> <span class="op">+</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>)</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop polyshade function through all folders</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>og_path <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\Documents\Shade_Mapping_R\Outputs\Neighbourhood Level"</span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>ras_folders <span class="op">=</span> os.listdir(og_path)</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>ras_folders</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>    ras_to_poly(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    out_name<span class="op">=</span>ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)])</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="co">#Define a function to interesect each shade raster in a folder with a specified feature class</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> intersector(directory, out_name, feature):</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>    ras_files <span class="op">=</span> os.listdir(directory)</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"poly"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>):</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>            arcpy.analysis.PairwiseIntersect(in_features <span class="op">=</span> [feature, ras],</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>            out_feature_class <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"intersected"</span> <span class="op">+</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count))</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_files)):</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ras_files[i].endswith(<span class="st">"poly"</span> <span class="op">+</span> <span class="bu">str</span>(count) <span class="op">+</span> <span class="st">".shp"</span>):</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>            ras <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_files[i]</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>            arcpy.analysis.PairwiseIntersect(in_features <span class="op">=</span> [feature, ras],</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>            out_feature_class <span class="op">=</span> directory <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> out_name <span class="op">+</span> <span class="st">"intersected"</span> <span class="op">+</span></span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>            <span class="bu">str</span>(count))</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> count <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="co">#Loop the intersection function through each folder</span></span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ras_folders)):</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>    intersector(directory <span class="op">=</span> og_path <span class="op">+</span> <span class="st">"</span><span class="ch">\\</span><span class="st">"</span> <span class="op">+</span> ras_folders[i], </span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>    out_name <span class="op">=</span> ras_folders[i][:ras_folders[i].index(<span class="st">" "</span>)], </span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>    feature <span class="op">=</span> <span class="vs">r"C:\Users\mlefcoe.stu\OneDrive - UBC\Documents\FCOR599\Shade         Mapping\building_polygons.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
