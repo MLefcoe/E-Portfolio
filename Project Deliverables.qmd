@@ -65,7 +65,7 @@ library(dplyr); library(leaflet); library(leafem); library(plainview); library(m
 
 clim_res <- rast("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Results/test_result_ag.tif")
 
-ramp <- colorNumeric(palette = c("#CFFDD7","#00000099"),na.color = "#00000000", domain = 1:100, alpha = TRUE)
+ramp <- colorNumeric(palette = c("#00883720","#C2A5CF","#7B3294"),na.color = "#00000000", domain = 1:100, alpha = TRUE)
 
 m <- leaflet() %>%
   addProviderTiles("Esri.WorldImagery") %>%
@@ -78,7 +78,7 @@ m <- leaflet() %>%
 m
 ```
 
-Interactive webmap of climate change resilient shade across campus. Dark areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
+Interactive webmap of climate change resilient shade across campus. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
 
 # Project 2 - Urban Heat Island Hotspots Montreal
 
