@@ -14,7 +14,7 @@ library(png)
 library(gifski)
 ```
 
-# Project 1 - Shade Mapping Trees and Buildings
+# Project 1 - Modelling Tree Shade Coverage
 
 ![](images/tree_render.png)
 
@@ -28,7 +28,7 @@ Assessing the percentage of tree shade per neighbourhood that falls on buildings
 Example hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade.
 :::
 
-![](images/clipboard-2343170415.png)
+![](images/clipboard-1625701164.png)
 
 Percentage of tree shade falling on buildings per neighbourhood, hourly from sunrise to sunset.
 
@@ -58,7 +58,11 @@ Same interactive point cloud with the central tree isolated and normalized groun
 
 Example tree shade cast by an individual tree every thirty minutes.
 
-#### Final Shade Map
+![](images/clipboard-1312977114.png)
+
+Black pine, honey locust, and deodar cedar recommended for planting in low shade areas. While honey locust has a lower median, it is the species with individuals casting the most shade.
+
+#### Shade Hotspot Map
 
 ```{r leaflet, include = FALSE}
 library(dplyr); library(leaflet); library(leafem); library(plainview); library(mapview); library(terra)
@@ -78,7 +82,7 @@ m <- leaflet() %>%
 m
 ```
 
-Interactive webmap of climate change resilient shade across campus. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
+Interactive map of climate change resilient shade across campus. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
 
 # Project 2 - Urban Heat Island Hotspots Montreal
 
