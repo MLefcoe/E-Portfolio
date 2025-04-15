@@ -1,5 +1,7 @@
 ---
 title: "Project Deliverables"
+code-block-bg: "white"
+code-block-border-left: "black"
 ---
 
 ```{r, echo=FALSE, include=FALSE}
@@ -39,7 +41,7 @@ Percentage of tree shade falling on buildings per neighbourhood, hourly from sun
 *Scroll to zoom. Left-click to rotate.*
 
 ```{r, echo = FALSE}
-eg_roi <- readLAS("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi.las") 
+eg_roi <- readLAS("F:/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi.las") 
 plot(eg_roi)  
 rgl::rglwidget()
 ```
@@ -47,7 +49,7 @@ rgl::rglwidget()
 Interactive point cloud for one area of interest filtered to display trees only.
 
 ```{r, echo = FALSE}
-eg_roiindiv <- readLAS("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi_indiv.las") 
+eg_roiindiv <- readLAS("F:/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/eg_roi_indiv.las") 
 plot(eg_roiindiv)  
 rgl::rglwidget()
 ```
@@ -67,7 +69,7 @@ Black pine, honey locust, and deodar cedar recommended for planting in low shade
 ```{r leaflet, include = FALSE}
 library(dplyr); library(leaflet); library(leafem); library(plainview); library(mapview); library(terra)
 
-clim_res <- rast("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Results/test_result_ag.tif")
+clim_res <- rast("F:/mlefcoe.stu/Documents/Shade_Mapping_R/Results/test_result_ag.tif")
 
 ramp <- colorNumeric(palette = c("#00883720","#C2A5CF","#7B3294"),na.color = "#00000000", domain = 1:100, alpha = TRUE)
 

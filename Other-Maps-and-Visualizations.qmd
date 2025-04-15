@@ -1,5 +1,7 @@
 ---
 title: "Other Maps and Visualizations"
+code-block-bg: "white"
+code-block-border-left: "black"
 ---
 
 ```{r, echo=FALSE, include=FALSE}
@@ -12,15 +14,16 @@ library(rayrender)
 library(raybevel)
 library(png)
 library(gifski)
+library(magick)
 ```
 
 ## 3D Interactive Plot
 
-```{r, echo=FALSE, include=FALSE}
-lasFile <- readLAScatalog("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")
+```{r, echo=FALSE, include=FALSE, message=FALSE}
+lasFile <- readLAScatalog("F:/mlefcoe.stu/Documents/FCOR599/Shade Mapping/LiDAR Vancouver 2022 - UBC Campus/All_LAS", filter = "-keep first")
 las <- clip_rectangle(lasFile, 481808.5,5456316.8, 482134.3, 5456601.2)
 
-buildings <- st_read("C:/Users/mlefcoe.stu/OneDrive - UBC/Documents/FCOR599/Shade Mapping/building_polygons.shp", promote_to_multi = FALSE)
+buildings <- st_read("F:/mlefcoe.stu/Documents/FCOR599/Shade Mapping/building_polygons.shp", promote_to_multi = FALSE)
 pt4 <- st_point(c(481808.5,5456316.8), dim = "XY")
 pt3 <- st_point(c(481808.5, 5456601.2), dim = "XY")
 pt2 <- st_point(c(482134.3, 5456316.8), dim = "XY")
@@ -43,7 +46,7 @@ dsm_matrix <- raster_to_matrix(dsm)
 ttops <- locate_trees(veg, lmf(ws = 5))
 tree_locations <- st_coordinates(ttops)
 dsm_extent <- ext(dsm)
-extent_vals <- dsm_extent@ptr$vector
+extent_vals <- dsm_extent@pntr$vector
 loc_metrics <- st_intersects(ttops, metrics$geometry)
 
 widths <- c()
@@ -57,8 +60,8 @@ for(i in 1:580){
 
 *Scroll to zoom. Left-click to rotate.*
 
-```{r, echo=FALSE}
-overlay_img <- png::readPNG("C:/Users/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/basemap_real.png")
+```{r, echo=FALSE, message=FALSE}
+overlay_img <- png::readPNG("F:/mlefcoe.stu/Documents/Shade_Mapping_R/Outputs/basemap_real.png")
 
 height_shade(dsm_matrix) %>%
   add_overlay(overlay_img) %>% 

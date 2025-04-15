@@ -1,5 +1,7 @@
 ---
 title: "Maxwell Lefcoe"
+code-block-bg: "white"
+code-block-border-left: "black"
 image: images/portfolio_headshot.png
 toc: false
 about:
