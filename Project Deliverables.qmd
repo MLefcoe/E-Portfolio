@@ -18,6 +18,8 @@ library(gifski)
 
 # Project 1 - Modelling Tree Shade Coverage
 
+[Report and Dataset](https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP3/HQZYIK)
+
 ![](images/tree_render.png)
 
 ### Tree Shade in UBC Neighbourhoods
