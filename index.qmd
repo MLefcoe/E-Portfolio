@@ -18,7 +18,6 @@ about:
       text: Email
       href: mailto:maxlefcoe@gmail.com
 ---
-
 ### Education
 
 BSc Environmental and Sustainability Science
@@ -38,10 +37,6 @@ Under the supervision of the Landscape Ecology and Urban Sprawl lab at Concordia
 **Analysis of Urban Heat Island Effect in Montreal**
 
 Completed a GIS analysis on the Urban Heat Island effect in partnership with community leads for the borough of Ville-Marie in Montreal.
-
-### Institutional Service
-
-Volunteering at Centre Greene Community Centre
 
 ::: {.content-visible when-format="html" layout-ncol="3"}
 ![](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWNscnBzM2FzYmd1amd2OWpoOG9iZGhzbGl0Z2ZyMmdneXJ6bGdpZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cYwvshSjQF0Lo6Pmkg/giphy.gif)
