@@ -115,3 +115,9 @@ Interactive 3D view of the Forest Sciences Centre on UBC Vancouver Campus.
 ![](images/salmon_network_good.jpg)
 
 The result of a hydrology network analysis for the conservation of salmon species in British Columbia.
+
+## Burn Severity Analysis
+
+![](images/fire.gif)
+
+NDVI changes indicate forest recovery over the course of four years after the Prouton Lakes wildfire in Cariboo, BC.
