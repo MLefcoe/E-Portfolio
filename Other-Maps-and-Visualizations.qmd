@@ -1,5 +1,5 @@
 ---
-title: "Other Maps and Visualizations"
+title: "Maps and Visualizations"
 code-block-bg: "white"
 code-block-border-left: "black"
 ---
@@ -16,6 +16,23 @@ library(png)
 library(gifski)
 library(magick)
 ```
+
+## Salmon Stream Network Analysis
+
+![](images/salmon_network_good.jpg)
+The result of a hydrology network analysis for the conservation of salmon species in British Columbia.
+
+## Shade Hotspot Map
+![](images/final_shademap.png)
+Shade Hotspot Map from the full report "Modelling Tree Shade Coverage: Planting Recommendations for Optimizing Shade on UBC Vancouver Campus". Includes LiDAR Generated 3D models as proof of concept, marking high and low shade areas.
+
+## Burn Severity Analysis
+![](images/fire.gif)
+NDVI changes indicate forest recovery over the course of four years after the Prouton Lakes wildfire in Cariboo, BC.
+
+## Whale Sanctuary Suitability Analysis
+![](images/whale_sanctuary.png)
+The result of a suitability analysis for the conservation of humpback whales in Hawai'i, USA.
 
 ## 3D Interactive Plot
 
@@ -109,15 +126,3 @@ rgl::rglwidget()
 ```
 
 Interactive 3D view of the Forest Sciences Centre on UBC Vancouver Campus.
-
-## Salmon Stream Network Analysis
-
-![](images/salmon_network_good.jpg)
-
-The result of a hydrology network analysis for the conservation of salmon species in British Columbia.
-
-## Burn Severity Analysis
-
-![](images/fire.gif)
-
-NDVI changes indicate forest recovery over the course of four years after the Prouton Lakes wildfire in Cariboo, BC.

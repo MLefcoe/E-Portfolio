@@ -28,14 +28,14 @@ Roussel J, Auty D (2024). *Airborne LiDAR Data Manipulation and Visualization fo
 
 #times <- data.frame(dates = seq(start, end, "hour"))
 
-#sun_pos <- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)
+#sun_calc <- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)
 
-shade_sim <- function(pc, sun_calc,name){   #take a LiDAR point cloud,
-  alt <- sun_calc$altitude*(180/pi)         #a table of sun positions,
-  azim <- sun_calc$azimuth*(180/pi)         #and output file name as inputs
+shade_sim <- function(pc, sun_pos, name){   #take a LiDAR point cloud,
+  alt <- sun_pos$altitude*(180/pi)         #a table of sun positions,
+  azim <- sun_pos$azimuth*(180/pi)         #and output file name as inputs
   
   if(alt >= 0){
-    dsm <- rasterize_canopy(pc, dsmtin(), res = 2) %>%    #create and shade a dsm
+    dsm <- rasterize_canopy(pc, dsmtin(), res = 0.5) %>%    #create and shade a dsm
       raster_to_matrix() %>% 
       ray_shade(sunaltitude = alt, sunangle = azim) %>% 
       rast()
@@ -50,14 +50,16 @@ shade_sim <- function(pc, sun_calc,name){   #take a LiDAR point cloud,
 
 ```{r, eval = FALSE}
 #Load in 764 segmented point clouds
-path <- (list.files("Outputs/Species Level/las_clipped", full.names = TRUE))
+#path <- list.files("Outputs/Species Level/las_clipped", full.names = TRUE)
 
-rois <- list()
-for(i in 1:length(path)){
-  rois[[i]] <- readLAS(path[i])
-}
+#rois <- list()
+#for(i in 1:length(path)){
+#  rois[[i]] <- readLAS(path[i])
+#}
 
-#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below
+#The point clouds are circular regions clipped from larger file. This allowed
+#for the center coordinates to be included in the filename and used in
+#isolating the central tree below
 roi_indiv <- list()
 for(i in 1:764){
 #generate metrics as a table of treeIDs and coordinates
@@ -73,7 +75,7 @@ test_centroid <- str_extract(path[i],
   st_point() %>%
   st_geometry()
 
-st_crs(test_centroid) <- 26910
+st_crs(test_centroid) <- 26910 #Define projection
   
 #add new row to metrics table that contains distance from tree to center
 new_metrics <- mutate(metrics, dist = st_distance(metrics, test_centroid))

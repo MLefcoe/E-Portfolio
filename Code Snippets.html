@@ -132,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./Other-Maps-and-Visualizations.html"> 
-<span class="menu-text">Other Maps and Visualizations</span></a>
+<span class="menu-text">Maps and Visualizations</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./Code Snippets.html" aria-current="page"> 
@@ -203,14 +203,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#times &lt;- data.frame(dates = seq(start, end, "hour"))</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#sun_pos &lt;- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#sun_calc &lt;- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>shade_sim <span class="ot">&lt;-</span> <span class="cf">function</span>(pc, sun_calc,name){   <span class="co">#take a LiDAR point cloud,</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  alt <span class="ot">&lt;-</span> sun_calc<span class="sc">$</span>altitude<span class="sc">*</span>(<span class="dv">180</span><span class="sc">/</span>pi)         <span class="co">#a table of sun positions,</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  azim <span class="ot">&lt;-</span> sun_calc<span class="sc">$</span>azimuth<span class="sc">*</span>(<span class="dv">180</span><span class="sc">/</span>pi)         <span class="co">#and output file name as inputs</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>shade_sim <span class="ot">&lt;-</span> <span class="cf">function</span>(pc, sun_pos, name){   <span class="co">#take a LiDAR point cloud,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  alt <span class="ot">&lt;-</span> sun_pos<span class="sc">$</span>altitude<span class="sc">*</span>(<span class="dv">180</span><span class="sc">/</span>pi)         <span class="co">#a table of sun positions,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  azim <span class="ot">&lt;-</span> sun_pos<span class="sc">$</span>azimuth<span class="sc">*</span>(<span class="dv">180</span><span class="sc">/</span>pi)         <span class="co">#and output file name as inputs</span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(alt <span class="sc">&gt;=</span> <span class="dv">0</span>){</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    dsm <span class="ot">&lt;-</span> <span class="fu">rasterize_canopy</span>(pc, <span class="fu">dsmtin</span>(), <span class="at">res =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span>    <span class="co">#create and shade a dsm</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    dsm <span class="ot">&lt;-</span> <span class="fu">rasterize_canopy</span>(pc, <span class="fu">dsmtin</span>(), <span class="at">res =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span>    <span class="co">#create and shade a dsm</span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">raster_to_matrix</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ray_shade</span>(<span class="at">sunaltitude =</span> alt, <span class="at">sunangle =</span> azim) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rast</span>()</span>
@@ -224,40 +224,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="isolate-center-tree-from-a-lidar-point-cloud">Isolate center tree from a LiDAR point cloud</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in 764 segmented point clouds</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> (<span class="fu">list.files</span>(<span class="st">"Outputs/Species Level/las_clipped"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#path &lt;- list.files("Outputs/Species Level/las_clipped", full.names = TRUE)</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rois <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(path)){</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  rois[[i]] <span class="ot">&lt;-</span> <span class="fu">readLAS</span>(path[i])</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#rois &lt;- list()</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#for(i in 1:length(path)){</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  rois[[i]] &lt;- readLAS(path[i])</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#}</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>roi_indiv <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">764</span>){</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#generate metrics as a table of treeIDs and coordinates</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">crown_metrics</span>(rois[[i]], <span class="sc">~</span><span class="fu">list</span>(<span class="at">z_max =</span> <span class="fu">max</span>(Z), <span class="at">z_mean =</span> <span class="fu">mean</span>(Z)))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#use filename to create point geometries in the center of the plot</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>test_centroid <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(path[i], </span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"[:digit:]{6}</span><span class="sc">\\</span><span class="st">.[:digit:]{1}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}|[:digit:]{6}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">"_"</span>, <span class="st">", "</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_split</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">,</span><span class="sc">\\</span><span class="st">s"</span>,<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_geometry</span>()</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(test_centroid) <span class="ot">&lt;-</span> <span class="dv">26910</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#add new row to metrics table that contains distance from tree to center</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>new_metrics <span class="ot">&lt;-</span> <span class="fu">mutate</span>(metrics, <span class="at">dist =</span> <span class="fu">st_distance</span>(metrics, test_centroid))</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#central tree is the tree with the shortest distance to the centroid</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>center_tree <span class="ot">&lt;-</span> <span class="fu">filter</span>(new_metrics, dist <span class="sc">==</span> <span class="fu">min</span>(dist))</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#assign it back out to a list</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>roi_indiv[[i]] <span class="ot">&lt;-</span> <span class="fu">filter_poi</span>(rois[[i]], treeID <span class="sc">==</span> center_tree<span class="sc">$</span>treeID)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#The point clouds are circular regions clipped from larger file. This allowed</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#for the center coordinates to be included in the filename and used in</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#isolating the central tree below</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>roi_indiv <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">764</span>){</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#generate metrics as a table of treeIDs and coordinates</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">crown_metrics</span>(rois[[i]], <span class="sc">~</span><span class="fu">list</span>(<span class="at">z_max =</span> <span class="fu">max</span>(Z), <span class="at">z_mean =</span> <span class="fu">mean</span>(Z)))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#use filename to create point geometries in the center of the plot</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>test_centroid <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(path[i], </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"[:digit:]{6}</span><span class="sc">\\</span><span class="st">.[:digit:]{1}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}|[:digit:]{6}</span><span class="sc">\\</span><span class="st">_[:digit:]{7}"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">"_"</span>, <span class="st">", "</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_split</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">,</span><span class="sc">\\</span><span class="st">s"</span>,<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_point</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_geometry</span>()</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(test_centroid) <span class="ot">&lt;-</span> <span class="dv">26910</span> <span class="co">#Define projection</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#add new row to metrics table that contains distance from tree to center</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>new_metrics <span class="ot">&lt;-</span> <span class="fu">mutate</span>(metrics, <span class="at">dist =</span> <span class="fu">st_distance</span>(metrics, test_centroid))</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#central tree is the tree with the shortest distance to the centroid</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>center_tree <span class="ot">&lt;-</span> <span class="fu">filter</span>(new_metrics, dist <span class="sc">==</span> <span class="fu">min</span>(dist))</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#assign it back out to a list</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>roi_indiv[[i]] <span class="ot">&lt;-</span> <span class="fu">filter_poi</span>(rois[[i]], treeID <span class="sc">==</span> center_tree<span class="sc">$</span>treeID)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

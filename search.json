@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Maxwell Lefcoe",
     "section": "",
-    "text": "Education\nBSc Environmental and Sustainability Science\nMaster of Geomatics for Environmental Management\n\n\nExperience\nÉco-Corridors Laurentiens\nCommunity based science organisation researching wildlife corridors. Performed field work, data collection and data analysis.\nAnimal Use of Manmade Crossing Structures\nUnder the supervision of the Landscape Ecology and Urban Sprawl lab at Concordia University, conducted research on animal use of water culverts and similar underpasses along highway 15 in the Laurentiens, QC. A road ecology project with the goal of studying and aiding habitat connectivity across highways.\nAnalysis of Urban Heat Island Effect in Montreal\nCompleted a GIS analysis on the Urban Heat Island effect in partnership with community leads for the borough of Ville-Marie in Montreal."
+    "text": "Geospatial professional with a Master’s in Geomatics for Environmental Management and a BSc in Environmental Science. Experienced in LiDAR data processing, GIS analysis, and remote sensing in both academic and applied settings. Passionate about using spatial data to drive conservation, environmental planning, and climate adaptation projects."
   },
   {
     "objectID": "resume.html",
@@ -151,7 +151,7 @@
     "href": "Project Deliverables.html",
     "title": "Project Deliverables",
     "section": "",
-    "text": "Project 1 - Modelling Tree Shade Coverage\nReport and Dataset\n\n\nTree Shade in UBC Neighbourhoods\nAssessing the percentage of tree shade per neighbourhood that falls on buildings.\n\nExample hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade.\n\nPercentage of tree shade falling on buildings per neighbourhood, hourly from sunrise to sunset.\n\n\nIndividual Tree Shade\n\nIsolating the shade of individual trees for a species level analysis. Beginning from a point cloud clipped to a species of interest, ending with a shade model for a specific tree.\nScroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive point cloud for one area of interest filtered to display trees only.\n\n\n\n\n\n\nSame interactive point cloud with the central tree isolated and normalized ground points added back in.\n\nExample tree shade cast by an individual tree every thirty minutes.\n\nBlack pine, honey locust, and deodar cedar recommended for planting in low shade areas. While honey locust has a lower median, it is the species with individuals casting the most shade.\n\n\nShade Hotspot Map\n\n\n\n\n\n\nInteractive map of climate change resilient shade across campus. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.\n\n\n\n\nProject 2 - Urban Heat Island Hotspots Montreal\nThe client for this project was Peter-Mcgill Community Table, looking to identify areas vulnerable to UHI in the district of Ville-Marie.\n\nRisk level based on medium income across districts, population aged 65 or older, and population density.\n\nEnvironmental risk factors map. Describes the likelihood of Urban Heat Island Effect."
+    "text": "Project 1 - Modelling Tree Shade Coverage\nFull Report\n\nMethods Overview\n\n\n\nTree Shade in UBC Neighbourhoods\nAssessing the percentage of tree shade per neighbourhood that falls on buildings.\n\nExample hourly tree shade from sunrise to sunset in Chancellor Place neighbourhood on a scale of 0 to 1, 0 being full shade.\n\nPercentage of tree shade falling on buildings per neighbourhood, hourly from sunrise to sunset.\n\n\nIndividual Tree Shade\n\nIsolating the shade of individual trees for a species level analysis. Beginning from a point cloud clipped to a species of interest, ending with a shade model for a specific tree.\nScroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive point cloud for one area of interest filtered to display trees only.\n\n\n\n\n\n\nSame interactive point cloud with the central tree isolated and normalized ground points added back in.\n\nExample tree shade cast by an individual tree every thirty minutes.\n\nBlack pine, honey locust, and deodar cedar recommended for planting in low shade areas. While honey locust has a lower median, it is the species with individuals casting the most shade.\n\n\nShade Hotspot Map\n\n\n\n\n\n\nInteractive map of climate change resilient tree shade across campus, including LiDAR generated 3D models of high and low shade areas. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.\n\n\n\n\nProject 2 - Urban Heat Island Hotspots Montreal\nThe client for this project was Peter-Mcgill Community Table, looking to identify areas vulnerable to Urban Heat Island effect in the district of Ville-Marie.\n\nRisk level based on medium income across districts, population aged 65 or older, and population density.\n\nEnvironmental risk factors map. Describes the likelihood of Urban Heat Island Effect."
   },
   {
     "objectID": "Maps and Visualizations.html",
@@ -186,7 +186,7 @@
     "href": "Code Snippets.html",
     "title": "Code Snippets",
     "section": "",
-    "text": "Code Snippets\nMorgan-Wall T (2025). rayshader: Create Maps and Visualize Data in 2D and 3D. R package version 0.38.10, https://github.com/tylermorganwall/rayshader, https://www.rayshader.com.\nRoussel J, Auty D, Coops NC, Tompalski P, Goodbody TR, Meador AS, Bourdon J, de Boissieu F, Achim A (2020). “lidR: An R package for analysis of Airborne Laser Scanning (ALS) data.” Remote Sensing of Environment, 251, 112061. ISSN 0034-4257, doi:10.1016/j.rse.2020.112061, https://www.sciencedirect.com/science/article/pii/S0034425720304314.\nRoussel J, Auty D (2024). Airborne LiDAR Data Manipulation and Visualization for Forestry Applications. R package version 4.1.2, https://cran.r-project.org/package=lidR.\n\nShade simulation function in R\n\n#library(suncalc)\n#library(rayshader)\n#library(terra)\n\n#### Setup time intervals and sun positions\n\n#start &lt;-  as.POSIXct(\"2024-07-17 01:00:00\", tz = \"America/Los_Angeles\")\n#end &lt;-  as.POSIXct(\"2024-07-18 00:00:00\", tz = \"America/Los_Angeles\")\n\n#times &lt;- data.frame(dates = seq(start, end, \"hour\"))\n\n#sun_pos &lt;- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)\n\nshade_sim &lt;- function(pc, sun_calc,name){   #take a LiDAR point cloud,\n  alt &lt;- sun_calc$altitude*(180/pi)         #a table of sun positions,\n  azim &lt;- sun_calc$azimuth*(180/pi)         #and output file name as inputs\n  \n  if(alt &gt;= 0){\n    dsm &lt;- rasterize_canopy(pc, dsmtin(), res = 2) %&gt;%    #create and shade a dsm\n      raster_to_matrix() %&gt;% \n      ray_shade(sunaltitude = alt, sunangle = azim) %&gt;% \n      rast()\n  \n    writeRaster(dsm, name, overwrite = TRUE)   #write out the result\n  }\n}\n\n\n\nIsolate center tree from a LiDAR point cloud\n\n#Load in 764 segmented point clouds\npath &lt;- (list.files(\"Outputs/Species Level/las_clipped\", full.names = TRUE))\n\nrois &lt;- list()\nfor(i in 1:length(path)){\n  rois[[i]] &lt;- readLAS(path[i])\n}\n\n#Point clouds are circular regions clipped from larger file. This allowed for the center coordinates to be included in the filename and used in isolating the central tree below\nroi_indiv &lt;- list()\nfor(i in 1:764){\n#generate metrics as a table of treeIDs and coordinates\nmetrics &lt;- crown_metrics(rois[[i]], ~list(z_max = max(Z), z_mean = mean(Z)))\n\n#use filename to create point geometries in the center of the plot\ntest_centroid &lt;- str_extract(path[i], \n                 \"[:digit:]{6}\\\\.[:digit:]{1}\\\\_[:digit:]{7}|[:digit:]{6}\\\\_[:digit:]{7}\") %&gt;%\n  str_replace(\"_\", \", \") %&gt;%\n  str_split(\"\\\\,\\\\s\",2) %&gt;%\n  unlist() %&gt;%\n  as.numeric() %&gt;%\n  st_point() %&gt;%\n  st_geometry()\n\nst_crs(test_centroid) &lt;- 26910\n  \n#add new row to metrics table that contains distance from tree to center\nnew_metrics &lt;- mutate(metrics, dist = st_distance(metrics, test_centroid))\n  \n#central tree is the tree with the shortest distance to the centroid\ncenter_tree &lt;- filter(new_metrics, dist == min(dist))\n  \n#assign it back out to a list\nroi_indiv[[i]] &lt;- filter_poi(rois[[i]], treeID == center_tree$treeID)\n}"
+    "text": "Code Snippets\nMorgan-Wall T (2025). rayshader: Create Maps and Visualize Data in 2D and 3D. R package version 0.38.10, https://github.com/tylermorganwall/rayshader, https://www.rayshader.com.\nRoussel J, Auty D, Coops NC, Tompalski P, Goodbody TR, Meador AS, Bourdon J, de Boissieu F, Achim A (2020). “lidR: An R package for analysis of Airborne Laser Scanning (ALS) data.” Remote Sensing of Environment, 251, 112061. ISSN 0034-4257, doi:10.1016/j.rse.2020.112061, https://www.sciencedirect.com/science/article/pii/S0034425720304314.\nRoussel J, Auty D (2024). Airborne LiDAR Data Manipulation and Visualization for Forestry Applications. R package version 4.1.2, https://cran.r-project.org/package=lidR.\n\nShade simulation function in R\n\n#library(suncalc)\n#library(rayshader)\n#library(terra)\n\n#### Setup time intervals and sun positions\n\n#start &lt;-  as.POSIXct(\"2024-07-17 01:00:00\", tz = \"America/Los_Angeles\")\n#end &lt;-  as.POSIXct(\"2024-07-18 00:00:00\", tz = \"America/Los_Angeles\")\n\n#times &lt;- data.frame(dates = seq(start, end, \"hour\"))\n\n#sun_calc &lt;- getSunlightPosition(date = times$dates, lat = 49.2827, lon = -123.1207)\n\nshade_sim &lt;- function(pc, sun_pos, name){   #take a LiDAR point cloud,\n  alt &lt;- sun_pos$altitude*(180/pi)         #a table of sun positions,\n  azim &lt;- sun_pos$azimuth*(180/pi)         #and output file name as inputs\n  \n  if(alt &gt;= 0){\n    dsm &lt;- rasterize_canopy(pc, dsmtin(), res = 0.5) %&gt;%    #create and shade a dsm\n      raster_to_matrix() %&gt;% \n      ray_shade(sunaltitude = alt, sunangle = azim) %&gt;% \n      rast()\n  \n    writeRaster(dsm, name, overwrite = TRUE)   #write out the result\n  }\n}\n\n\n\nIsolate center tree from a LiDAR point cloud\n\n#Load in 764 segmented point clouds\n#path &lt;- list.files(\"Outputs/Species Level/las_clipped\", full.names = TRUE)\n\n#rois &lt;- list()\n#for(i in 1:length(path)){\n#  rois[[i]] &lt;- readLAS(path[i])\n#}\n\n#The point clouds are circular regions clipped from larger file. This allowed\n#for the center coordinates to be included in the filename and used in\n#isolating the central tree below\nroi_indiv &lt;- list()\nfor(i in 1:764){\n#generate metrics as a table of treeIDs and coordinates\nmetrics &lt;- crown_metrics(rois[[i]], ~list(z_max = max(Z), z_mean = mean(Z)))\n\n#use filename to create point geometries in the center of the plot\ntest_centroid &lt;- str_extract(path[i], \n                 \"[:digit:]{6}\\\\.[:digit:]{1}\\\\_[:digit:]{7}|[:digit:]{6}\\\\_[:digit:]{7}\") %&gt;%\n  str_replace(\"_\", \", \") %&gt;%\n  str_split(\"\\\\,\\\\s\",2) %&gt;%\n  unlist() %&gt;%\n  as.numeric() %&gt;%\n  st_point() %&gt;%\n  st_geometry()\n\nst_crs(test_centroid) &lt;- 26910 #Define projection\n  \n#add new row to metrics table that contains distance from tree to center\nnew_metrics &lt;- mutate(metrics, dist = st_distance(metrics, test_centroid))\n  \n#central tree is the tree with the shortest distance to the centroid\ncenter_tree &lt;- filter(new_metrics, dist == min(dist))\n  \n#assign it back out to a list\nroi_indiv[[i]] &lt;- filter_poi(rois[[i]], treeID == center_tree$treeID)\n}"
   },
   {
     "objectID": "Other Maps and Visualizations.html",
@@ -233,29 +233,43 @@
   {
     "objectID": "Other-Maps-and-Visualizations.html",
     "href": "Other-Maps-and-Visualizations.html",
-    "title": "Other Maps and Visualizations",
+    "title": "Maps and Visualizations",
     "section": "",
-    "text": "Scroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive 3D view of the Forest Sciences Centre on UBC Vancouver Campus."
+    "text": "The result of a hydrology network analysis for the conservation of salmon species in British Columbia."
   },
   {
     "objectID": "Other-Maps-and-Visualizations.html#d-interactive-plot",
     "href": "Other-Maps-and-Visualizations.html#d-interactive-plot",
-    "title": "Other Maps and Visualizations",
-    "section": "",
-    "text": "Scroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive 3D view of the Forest Sciences Centre on UBC Vancouver Campus."
+    "title": "Maps and Visualizations",
+    "section": "3D Interactive Plot",
+    "text": "3D Interactive Plot\nScroll to zoom. Left-click to rotate.\n\n\n\n\n\n\nInteractive 3D view of the Forest Sciences Centre on UBC Vancouver Campus."
   },
   {
     "objectID": "Other-Maps-and-Visualizations.html#salmon-stream-network-analysis",
     "href": "Other-Maps-and-Visualizations.html#salmon-stream-network-analysis",
-    "title": "Other Maps and Visualizations",
-    "section": "Salmon Stream Network Analysis",
-    "text": "Salmon Stream Network Analysis\n\nThe result of a hydrology network analysis for the conservation of salmon species in British Columbia."
+    "title": "Maps and Visualizations",
+    "section": "",
+    "text": "The result of a hydrology network analysis for the conservation of salmon species in British Columbia."
   },
   {
     "objectID": "Other-Maps-and-Visualizations.html#burn-severity-analysis",
     "href": "Other-Maps-and-Visualizations.html#burn-severity-analysis",
-    "title": "Other Maps and Visualizations",
+    "title": "Maps and Visualizations",
     "section": "Burn Severity Analysis",
-    "text": "Burn Severity Analysis\n\nNDVI changes indicate forest recovery over the course of four years after the Prouton Lakes wildfire in Cariboo, BC."
+    "text": "Burn Severity Analysis\n NDVI changes indicate forest recovery over the course of four years after the Prouton Lakes wildfire in Cariboo, BC."
+  },
+  {
+    "objectID": "Other-Maps-and-Visualizations.html#shade-hotspot-map",
+    "href": "Other-Maps-and-Visualizations.html#shade-hotspot-map",
+    "title": "Maps and Visualizations",
+    "section": "Shade Hotspot Map",
+    "text": "Shade Hotspot Map\n Shade Hotspot Map from the full report “Modelling Tree Shade Coverage: Planting Recommendations for Optimizing Shade on UBC Vancouver Campus”. Includes LiDAR Generated 3D models as proof of concept, marking high and low shade areas."
+  },
+  {
+    "objectID": "Other-Maps-and-Visualizations.html#whale-sanctuary-suitability-analysis",
+    "href": "Other-Maps-and-Visualizations.html#whale-sanctuary-suitability-analysis",
+    "title": "Maps and Visualizations",
+    "section": "Whale Sanctuary Suitability Analysis",
+    "text": "Whale Sanctuary Suitability Analysis\n The result of a suitability analysis for the conservation of humpback whales in Hawai’i, USA."
   }
 ]

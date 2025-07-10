@@ -18,9 +18,11 @@ library(gifski)
 
 # Project 1 - Modelling Tree Shade Coverage
 
-[Report and Dataset](https://borealisdata.ca/dataset.xhtml?persistentId=doi:10.5683/SP3/HQZYIK)
+[Full Report](https://sustain.ubc.ca/sites/default/files/seedslibrary/Final%20Report%20Tree%20Planting%20Recommendations%20for%20Optimizing%20Shade%20at%20UBC%20Vancouver_0.pdf)
 
-![](images/tree_render.png)
+### Methods Overview
+
+![](images/final_methods.drawio.png)
 
 ### Tree Shade in UBC Neighbourhoods
 
@@ -71,11 +73,27 @@ Black pine, honey locust, and deodar cedar recommended for planting in low shade
 ```{r leaflet, include = FALSE}
 library(dplyr); library(leaflet); library(leafem); library(plainview); library(mapview); library(terra)
 
+locations <- data.frame(
+  name = c("Strong Shade","Weak Shade"),
+  lat = c(49.26861454301506, 49.25956331721559),
+  long = c(-123.24812585166077, -123.24423833029839),
+  img_url = c("https://i.imgur.com/WsEntqc.png","https://i.imgur.com/dWiyyM4.png")
+  )
+
+locations$popup <- paste0(
+  "<b>", locations$name, "</b><br>",
+  "<img src='", locations$img_url, "' width='300px'>"
+)
+
 clim_res <- rast("F:/mlefcoe.stu/Documents/Shade_Mapping_R/Results/test_result_ag.tif")
 
 ramp <- colorNumeric(palette = c("#00883720","#C2A5CF","#7B3294"),na.color = "#00000000", domain = 1:100, alpha = TRUE)
 
-m <- leaflet() %>%
+m <- leaflet(locations) %>% 
+  addTiles() %>% 
+  addMarkers(~long, ~lat,
+             popup = ~popup,
+             options = popupOptions(closeButton = FALSE)) %>% 
   addProviderTiles("Esri.WorldImagery") %>%
   addScaleBar(position = c("bottomleft")) %>%
   setView(-123.245891, 49.262280, zoom = 13.6) %>% 
@@ -86,11 +104,11 @@ m <- leaflet() %>%
 m
 ```
 
-Interactive map of climate change resilient shade across campus. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
+Interactive map of climate change resilient tree shade across campus, including LiDAR generated 3D models of high and low shade areas. Purple areas represent a high density of tall, climate change resilient tree species that tend to cast more shade.
 
 # Project 2 - Urban Heat Island Hotspots Montreal
 
-The client for this project was Peter-Mcgill Community Table, looking to identify areas vulnerable to UHI in the district of Ville-Marie.
+The client for this project was Peter-Mcgill Community Table, looking to identify areas vulnerable to Urban Heat Island effect in the district of Ville-Marie.
 
 ![](images/clipboard-3181373758.png)
 
