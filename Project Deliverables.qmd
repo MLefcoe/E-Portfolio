@@ -22,7 +22,7 @@ library(gifski)
 
 ### Methods Overview
 
-![](images/final_methods.png)
+![](images/Final_methods.png)
 
 ### Tree Shade in UBC Neighbourhoods
 
