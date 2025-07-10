@@ -26,7 +26,7 @@ library(gifski)
 
 ### Tree Shade in UBC Neighbourhoods
 
-Assessing the percentage of tree shade per neighbourhood that falls on buildings.
+#### Assessing the percentage of tree shade per neighbourhood that falls on buildings.
 
 ::: {.content-visible when-format="html"}
 ![](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHhkc3kxb3VtdG5lcW9xYWVoaWFqbHc2MmhjdmxsdzJzZmVnc3FvZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xaE3XXdeeLoLcssRe3/giphy.gif)
