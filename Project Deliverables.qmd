@@ -18,7 +18,7 @@ library(gifski)
 
 # Project 1 - Modelling Tree Shade Coverage
 
-[Full Report](https://sustain.ubc.ca/sites/default/files/seedslibrary/Final%20Report%20Tree%20Planting%20Recommendations%20for%20Optimizing%20Shade%20at%20UBC%20Vancouver_0.pdf)
+[Read The Full Report Here](https://sustain.ubc.ca/sites/default/files/seedslibrary/Final%20Report%20Tree%20Planting%20Recommendations%20for%20Optimizing%20Shade%20at%20UBC%20Vancouver_0.pdf)
 
 ### Methods Overview
 
