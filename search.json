@@ -271,5 +271,19 @@
     "title": "Maps and Visualizations",
     "section": "Whale Sanctuary Suitability Analysis",
     "text": "Whale Sanctuary Suitability Analysis\n The result of a suitability analysis for the conservation of humpback whales in Hawai’i, USA."
+  },
+  {
+    "objectID": "Other-Maps-and-Visualizations.html#d-arcgis-online-webapp",
+    "href": "Other-Maps-and-Visualizations.html#d-arcgis-online-webapp",
+    "title": "Maps and Visualizations",
+    "section": "3D ArcGIS Online webapp",
+    "text": "3D ArcGIS Online webapp"
+  },
+  {
+    "objectID": "Other-Maps-and-Visualizations.html#tree-shading-simulation-of-ubc-vancouver-campus",
+    "href": "Other-Maps-and-Visualizations.html#tree-shading-simulation-of-ubc-vancouver-campus",
+    "title": "Maps and Visualizations",
+    "section": "Tree Shading Simulation of UBC Vancouver Campus",
+    "text": "Tree Shading Simulation of UBC Vancouver Campus\n\nInteractive ArcGIS Online WebApp. Allows for 3D simulation of tree shade at a given date and time across Vancouver’s UBC Campus. Tree and building data courtesy of UBC Campus and Community Planning."
   }
 ]
