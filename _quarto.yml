@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: F:/mlefcoe.stu/E-Portfolio
+  output-dir: C:/Users/user/Documents/E-Portfolio
 
 website:
   title: "Portfolio: Geomatics and Environment"
