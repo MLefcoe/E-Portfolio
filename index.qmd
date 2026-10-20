@@ -2,7 +2,7 @@
 title: "Maxwell Lefcoe"
 code-block-bg: "white"
 code-block-border-left: "black"
-image: images/portfolio_headshot.png
+image: images/portfolio_headshot.JPG
 toc: false
 about:
   template: jolla
